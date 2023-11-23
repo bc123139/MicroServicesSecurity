@@ -1,0 +1,8 @@
+﻿
+https://localhost:5011/connect/token
+type: post (use body x-www-form-urlencoded)
+client_id=first-client,
+client_secret=mysecret,
+grant_type=password,
+username=usman,
+password=usmanPass
