@@ -9,7 +9,7 @@ namespace AuthServer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "42c5448c-e9a9-4300-b84c-29b7e9aab7fd", "64e71738-ea63-4138-95bb-6cef9d39e8c0", "Àdmin", "ÀDMIN" });
+                values: new object[] { "42c5448c-e9a9-4300-b84c-29b7e9aab7fd", "64e71738-ea63-4138-95bb-6cef9d39e8c0", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",

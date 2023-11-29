@@ -32,7 +32,9 @@ namespace AuthServer
             var builder = services.AddIdentityServer(options =>
             {
                 options.EmitStaticAudienceClaim= true;
-            }).AddTestUsers(MemoryConfig.TestUsers()).AddConfigurationStore(opt =>
+            })
+                //.AddTestUsers(MemoryConfig.TestUsers())
+                .AddConfigurationStore(opt =>
             {
                 opt.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("OAuth"),
                 sql => sql.MigrationsAssembly(migrationAssembly));

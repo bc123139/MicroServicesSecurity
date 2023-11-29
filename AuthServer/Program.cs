@@ -1,6 +1,7 @@
 using AuthServer.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -26,7 +27,11 @@ namespace AuthServer
                 .Enrich.FromLogContext()
                 .WriteTo.Console(outputTemplate:"[{TimeStamp:HHM:mm:ss} {Level}] {SourceContext}")
                 .CreateLogger();
-            CreateHostBuilder(args).Build().MigrateDatabase().Run();
+            var builder = CreateHostBuilder(args).Build();
+            var config = builder.Services.GetRequiredService<IConfiguration>();
+            var connectionString = config.GetConnectionString("OAuthIdentity");
+            SeedUserData.InsertSeedData(connectionString);
+            builder.MigrateDatabase().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

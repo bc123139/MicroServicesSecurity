@@ -12,7 +12,7 @@ namespace AuthServer.Entities.Configuration
             builder.HasData(new IdentityRole
             {
                 Name = "Àdmin",
-                NormalizedName = "ÀDMIN",
+                NormalizedName = "ADMIN",
                 Id = "42c5448c-e9a9-4300-b84c-29b7e9aab7fd"
             },
             new IdentityRole
