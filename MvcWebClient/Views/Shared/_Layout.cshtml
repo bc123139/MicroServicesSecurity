@@ -34,11 +34,21 @@
                         <section>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
                         </section>
+                        <section>
+                            <a class="nav-link text-dark" asp-action="Register"
+                            asp-controller="Account" asp-protocol="https"
+                            asp-host="localhost:5011" asp-route-redirectUrl="https://localhost:5201">Register</a>
+                        </section>
                     }
                     else
                     {
                         <section>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                        </section>
+                        <section>
+                            <a class="nav-link text-dark" asp-action="Register"
+                           asp-controller="Account" asp-protocol="https"
+                           asp-host="localhost:5011" asp-route-redirectUrl="https://localhost:5201">Register</a>
                         </section>
                     }
                 </div>

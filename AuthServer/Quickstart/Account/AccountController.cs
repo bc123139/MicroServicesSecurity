@@ -3,6 +3,8 @@
 
 
 using AuthServer.Entities;
+using AuthServer.ViewModels;
+using AutoMapper;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Events;
@@ -17,7 +19,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServerHost.Quickstart.UI
@@ -38,6 +42,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IMapper _mapper;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -48,12 +53,14 @@ namespace IdentityServerHost.Quickstart.UI
             UserManager<User> userManager
 ,
             SignInManager<User> signInManager
+,
+            IMapper mapper
             //TestUserStore users = null
             )
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            
+
             //_users = users ?? new TestUserStore(TestUsers.Users);
 
             _interaction = interaction;
@@ -62,6 +69,7 @@ namespace IdentityServerHost.Quickstart.UI
             _events = events;
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -360,6 +368,42 @@ namespace IdentityServerHost.Quickstart.UI
             }
 
             return vm;
+        }
+
+        [HttpGet]
+        public IActionResult Register(string returnUrl)
+        {
+            ViewData["ReturnUrl"]= returnUrl;   
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(UserRegistrationModel model,string returnUrl)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = _mapper.Map<User>(model);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return View(model);
+            }
+            await _userManager.AddToRoleAsync(user, "Admin");
+            await _userManager.AddClaimsAsync(user, new Claim[]
+                {
+                    new Claim(JwtClaimTypes.GivenName,user.FirstName),
+                    new Claim(JwtClaimTypes.FamilyName,user.LastName),
+                    new Claim(JwtClaimTypes.Role,"Admin"),
+                    new Claim(JwtClaimTypes.Address,user.Address)
+                });
+            return Redirect(returnUrl);
         }
     }
 }

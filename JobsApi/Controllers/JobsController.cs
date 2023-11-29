@@ -11,7 +11,8 @@ namespace JobsApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles ="Admin")]
+   // [Authorize(Roles ="Admin")]
+    [Authorize]
     public class JobsController : ControllerBase
     {
         private readonly JobsContext _jobsContext;
