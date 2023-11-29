@@ -26,6 +26,7 @@ namespace MvcWebClient.Controllers
             return View(jobs);
         }
 
+        [Authorize(Roles ="Admin")]
         public IActionResult Privacy()
         {
             return View();
