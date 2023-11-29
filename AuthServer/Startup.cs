@@ -1,6 +1,8 @@
 using AuthServer.Config;
+using AuthServer.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,10 @@ namespace AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("OAuthIdentity")));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<UserContext>()
+                .AddDefaultTokenProviders();
             var builder = services.AddIdentityServer(options =>
             {
                 options.EmitStaticAudienceClaim= true;
@@ -34,12 +40,18 @@ namespace AuthServer
             {
                 opt.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("OAuth"),
                 sql => sql.MigrationsAssembly(migrationAssembly));
-            });
+            })
+            .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
             /*
              Migrations:
             Add-Migration InitialPersistedGrantMigration -c PersistedGrantDbContext -o Migrations/IdentityServer/PersistedGrantDb
             Add-Migration InitialConfigurationMigration -c ConfigurationDbContext -o Migrations/IdentityServer/ConfigurationDb
+            --Identity tables:
+            Add-Migration CreateIdentityTables -c UserContext
+            Update-Database -Context UserContext
+            Add-Migration AddRolesToDb -Context UserContext
+            Update-Database -Context UserContext
              */
             services.AddControllersWithViews();
             //for in memory idenity server--
