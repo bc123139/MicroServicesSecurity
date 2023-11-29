@@ -32,7 +32,7 @@ namespace AuthServer.Config
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris=new List<string>{ "https://localhost:5201/signin-oidc" },
                 AllowedScopes={IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Address,"roles"},
+                    IdentityServerConstants.StandardScopes.Address,"roles","jobsApi.scope"},
                 ClientSecrets={new Secret("mvcclientsecret".Sha512()) },
                 RequirePkce=true,
                 RequireConsent=true,
@@ -49,7 +49,8 @@ namespace AuthServer.Config
         {
             new ApiResource("jobsApi","Jobs Api")
             {
-                Scopes={"jobsApi.scope"}
+                Scopes={"jobsApi.scope"},
+                UserClaims =new List<string>{"role"}
             }
         };
 

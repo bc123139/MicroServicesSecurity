@@ -4,15 +4,17 @@ using MvcWebClient.Http;
 using MvcWebClient.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MvcWebClient.Services
 {
     public class JobService : IJobService
     {
-        private readonly IHttpClient _apiClient;
+        //private readonly IHttpClient _apiClient;
+        private readonly HttpClient _apiClient;
         private readonly ApiConfig _apiConfig;
-        public JobService(IHttpClient apiClient, IOptionsMonitor<ApiConfig> apiConfig)
+        public JobService(HttpClient apiClient, IOptionsMonitor<ApiConfig> apiConfig)
         {
             _apiClient = apiClient;
             _apiConfig = apiConfig.CurrentValue;

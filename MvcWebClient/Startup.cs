@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using MvcWebClient.Config;
 using MvcWebClient.Http;
+using MvcWebClient.Infrastructure;
 using MvcWebClient.Services;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -29,8 +30,11 @@ namespace MvcWebClient
         public void ConfigureServices(IServiceCollection services)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddSingleton<IHttpClient,GeneralHttpClient>();
-            services.AddTransient<IJobService,JobService>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<HttpClientAuthorizationDelegateHandler>();
+            //services.AddSingleton<IHttpClient,GeneralHttpClient>();
+            services.AddHttpClient<IJobService,JobService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegateHandler>();
             services.Configure<ApiConfig>(Configuration.GetSection(nameof(ApiConfig)));
             services.AddAuthentication(opt =>
             {
@@ -43,7 +47,7 @@ namespace MvcWebClient
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, opt =>
             {
                 opt.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                opt.Authority = "https://localhost:5011";
+                opt.Authority = "https://localhost:5011";//Auth Server
                 opt.ClientId = "mvc-client";
                 opt.ResponseType = OpenIdConnectResponseType.Code;
                 opt.SaveTokens = true;
@@ -53,6 +57,7 @@ namespace MvcWebClient
                 opt.ClaimActions.MapUniqueJsonKey("address", "address");
                 opt.Scope.Add("roles");
                 opt.ClaimActions.MapUniqueJsonKey("role", "role");
+                opt.Scope.Add("jobsApi.scope");
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     RoleClaimType = JwtClaimTypes.Role
