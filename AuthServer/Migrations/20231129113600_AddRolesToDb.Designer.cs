@@ -126,8 +126,8 @@ namespace AuthServer.Migrations
                         {
                             Id = "42c5448c-e9a9-4300-b84c-29b7e9aab7fd",
                             ConcurrencyStamp = "64e71738-ea63-4138-95bb-6cef9d39e8c0",
-                            Name = "Àdmin",
-                            NormalizedName = "ÀDMIN"
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
