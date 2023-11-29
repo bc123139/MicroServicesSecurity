@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Job>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>New Jobs (@Model.Count())</h1>
+        <hr/>
+
+    </div>
+</div>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <div class="card-title">
+                <h3>@item.Title</h3>
+                <span>@item.Company | @item.Location |posted on @item.PostedDate.ToString("MM/dd/yyyy")</span>
+            </div>
+            <p class="text-center">@item.Description</p>
+            <a class="btn btn-success" href="@Url.Action("Apply","Jobs", new {id = item.Id})" role="button" Apply for this job></a>
+            <hr/>
+        </div>
+    }
+
+</div>

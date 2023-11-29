@@ -1,17 +1,12 @@
 using JobsApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JobsApi
 {
@@ -27,7 +22,13 @@ namespace JobsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", opt =>
+                {
+                    opt.RequireHttpsMetadata = false;
+                    opt.Authority = "https://localhost:5011";
+                    opt.Audience = "jobsApi";
+                });
             services.AddControllers();
             AddDbContext(services);
         }
@@ -44,7 +45,7 @@ namespace JobsApi
             });
             services.AddDbContext<JobsContext>(opt =>
             {
-                var connectionString= Configuration.GetConnectionString("DefaultConnection") ?? "JobsDb";
+                var connectionString= Configuration.GetConnectionString("sqldb-job") ?? "sqldb";
                 opt.UseSqlServer(connectionString,opt=>opt.EnableRetryOnFailure(5));
                 debugLogging(opt);
             },ServiceLifetime.Transient);
@@ -61,7 +62,7 @@ namespace JobsApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

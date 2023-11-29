@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer", "AuthServer\AuthServer.csproj", "{16FCB0BC-F511-4A36-A03D-B4175900E1A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer", "AuthServer\AuthServer.csproj", "{16FCB0BC-F511-4A36-A03D-B4175900E1A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsApi", "JobsApi\JobsApi.csproj", "{131A3F11-A732-47B9-9FD9-1BD9223863D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsApi", "JobsApi\JobsApi.csproj", "{131A3F11-A732-47B9-9FD9-1BD9223863D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcWebClient", "MvcWebClient\MvcWebClient.csproj", "{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{131A3F11-A732-47B9-9FD9-1BD9223863D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{131A3F11-A732-47B9-9FD9-1BD9223863D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{131A3F11-A732-47B9-9FD9-1BD9223863D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
