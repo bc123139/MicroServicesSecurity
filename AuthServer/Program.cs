@@ -1,3 +1,4 @@
+using AuthServer.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +26,7 @@ namespace AuthServer
                 .Enrich.FromLogContext()
                 .WriteTo.Console(outputTemplate:"[{TimeStamp:HHM:mm:ss} {Level}] {SourceContext}")
                 .CreateLogger();
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().MigrateDatabase().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
