@@ -440,5 +440,49 @@ namespace IdentityServerHost.Quickstart.UI
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email, string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var model = new ResetPasswordModel
+            {
+                Email = email,
+                Token = token
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model,string returnUrl)
+        {
+            ViewData["ReturnUrl"]=returnUrl;
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user= await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return RedirectToAction(nameof(ResetPasswordConfirmation),new {returnUrl});
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (!resetPasswordResult.Succeeded)
+            {
+                foreach (var error in resetPasswordResult.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return View(model);
+            }
+            return RedirectToAction(nameof(ResetPasswordConfirmation),new {returnUrl});
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation(string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
     }
 }
