@@ -1,5 +1,6 @@
 using AuthServer.Config;
 using AuthServer.Entities;
+using EmailService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Reflection;
 
 namespace AuthServer
@@ -25,6 +27,8 @@ namespace AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            var emailConfig = Configuration.GetSection(nameof(EmailConfiguration)).Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("OAuthIdentity")));
             services.AddIdentity<User, IdentityRole>()
@@ -46,6 +50,10 @@ namespace AuthServer
             })
             .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan=TimeSpan.FromHours(2);
+            });
             /*
              Migrations:
             Add-Migration InitialPersistedGrantMigration -c PersistedGrantDbContext -o Migrations/IdentityServer/PersistedGrantDb

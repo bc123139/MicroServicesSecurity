@@ -5,6 +5,7 @@
 using AuthServer.Entities;
 using AuthServer.ViewModels;
 using AutoMapper;
+using EmailService;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Events;
@@ -43,6 +44,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
         private readonly IMapper _mapper;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -55,6 +57,8 @@ namespace IdentityServerHost.Quickstart.UI
             SignInManager<User> signInManager
 ,
             IMapper mapper
+,
+            IEmailSender emailSender
             //TestUserStore users = null
             )
         {
@@ -70,6 +74,7 @@ namespace IdentityServerHost.Quickstart.UI
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -404,6 +409,36 @@ namespace IdentityServerHost.Quickstart.UI
                     new Claim(JwtClaimTypes.Address,user.Address)
                 });
             return Redirect(returnUrl);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword(string returnUrl)
+        {
+            ViewData["ReturnUrl"]= returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model,string returnUrl)
+        {
+            if (!ModelState.IsValid) 
+            {
+                return View(model);
+            }
+            var user= await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callBack = Url.Action(nameof(ResetPassword), "Account", new { token, email = model.Email,returnUrl },Request.Scheme);
+            var message = new Message(new string[] { model.Email }, "reset password token", callBack, null);
+            await _emailSender.SendEmailAsync(message);
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
         }
     }
 }

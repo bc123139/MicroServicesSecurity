@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer", "AuthServer\Au
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsApi", "JobsApi\JobsApi.csproj", "{131A3F11-A732-47B9-9FD9-1BD9223863D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcWebClient", "MvcWebClient\MvcWebClient.csproj", "{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcWebClient", "MvcWebClient\MvcWebClient.csproj", "{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{A9DF9943-8227-4F27-A71D-8E9E1B3D84E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{120938FF-C19C-4DCB-8B76-C2F2738C5ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9DF9943-8227-4F27-A71D-8E9E1B3D84E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9DF9943-8227-4F27-A71D-8E9E1B3D84E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9DF9943-8227-4F27-A71D-8E9E1B3D84E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9DF9943-8227-4F27-A71D-8E9E1B3D84E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
