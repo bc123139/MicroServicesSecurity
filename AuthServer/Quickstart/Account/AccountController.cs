@@ -408,7 +408,42 @@ namespace IdentityServerHost.Quickstart.UI
                     new Claim(JwtClaimTypes.Role,"Admin"),
                     new Claim(JwtClaimTypes.Address,user.Address)
                 });
-            return Redirect(returnUrl);
+            await SendEmailConfirmationLink(user, returnUrl);
+            return Redirect(nameof(SuccessRegistration));
+        }
+
+        [HttpGet]
+        public IActionResult SuccessRegistration()
+        {
+            return View();
+        }
+        private async Task SendEmailConfirmationLink(User user, string returnUrl)
+        {
+            var token=await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var emailConfirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email, returnUrl },Request.Scheme);
+            var message = new UserEmailOptions { ToEmails = new System.Collections.Generic.List<string> { user.Email }, Subject = "confirm email link", Body = emailConfirmationLink };
+            await _emailSender.SendAsync(message);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string token, string email, string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return RedirectToAction(nameof(Error), new { returnUrl });
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+                return View(nameof(ConfirmEmail));
+            else return RedirectToAction(nameof(Error), new { returnUrl });
+
+        }
+
+        [HttpGet]
+        public IActionResult Error(string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
         }
 
         [HttpGet]
@@ -431,8 +466,9 @@ namespace IdentityServerHost.Quickstart.UI
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callBack = Url.Action(nameof(ResetPassword), "Account", new { token, email = model.Email,returnUrl },Request.Scheme);
-            var message = new Message(new string[] { model.Email }, "reset password token", callBack, null);
-            await _emailSender.SendEmailAsync(message);
+           // var message = new Message(new string[] { model.Email }, "reset password token", callBack, null);
+            var message = new UserEmailOptions { ToEmails = new System.Collections.Generic.List<string> { model.Email }, Subject = "reset password token", Body = callBack };
+            await _emailSender.SendAsync(message);
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
 
@@ -475,7 +511,6 @@ namespace IdentityServerHost.Quickstart.UI
                 return View(model);
             }
             return RedirectToAction(nameof(ResetPasswordConfirmation),new {returnUrl});
-            return View();
         }
 
         [HttpGet]

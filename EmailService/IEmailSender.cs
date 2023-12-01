@@ -4,6 +4,6 @@ namespace EmailService
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(Message message);
+        Task SendAsync(UserEmailOptions userEmailOptions);
     }
 }

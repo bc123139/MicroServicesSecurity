@@ -16,6 +16,6 @@ namespace IdentityServerHost.Quickstart.UI
         //changed from false to true
         public static bool AutomaticRedirectAfterSignOut = true;
 
-        public static string InvalidCredentialsErrorMessage = "Invalid username or password";
+        public static string InvalidCredentialsErrorMessage = "Invalid login attempt";
     }
 }

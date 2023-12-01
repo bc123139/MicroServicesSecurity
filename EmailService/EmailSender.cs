@@ -1,72 +1,50 @@
-﻿using MimeKit;
-using System;
-using System.Linq;
-using MailKit.Net.Smtp;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.Threading.Tasks;
+using System.Net.Mail;
+using System.Net;
+using System.Text;
 
 namespace EmailService
 {
     public class EmailSender : IEmailSender
     {
-        private readonly EmailConfiguration _emailConfig;
+        private readonly EmailConfiguration _smptpConfigurationModel;
 
         public EmailSender(EmailConfiguration emailConfig)
         {
-            _emailConfig = emailConfig;
+            _smptpConfigurationModel = emailConfig;
         }
-        public async Task SendEmailAsync(Message message)
+        public async Task SendAsync(UserEmailOptions userEmailOptions)
         {
-            var emailMessage = CreateEmailMessage(message);
-            await SendAsync(emailMessage);
+            await SendEmail(userEmailOptions);
         }
 
-        private MimeMessage CreateEmailMessage(Message message)
+
+        private async Task SendEmail(UserEmailOptions userEmailOptions)
         {
-            var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(_emailConfig.From));
-            emailMessage.To.AddRange(message.To);
-            emailMessage.Subject = message.Subject;
-            var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<h2 style='color: red;'> {0}</h2>", message.Content) };
-            if (message.Attachments != null && message.Attachments.Any())
+            var mail = new MailMessage
             {
-                byte[] fileBytes;
-                foreach (var attachment in message.Attachments)
-                {
-                    using(var ms=new MemoryStream())
-                    {
-                        attachment.CopyTo(ms);
-                        fileBytes = ms.ToArray();
-                    }
-                    bodyBuilder.Attachments.Add(attachment.FileName , fileBytes, ContentType.Parse(fileBytes));
-                }
-            }
-            emailMessage.Body = bodyBuilder.ToMessageBody();
-            return emailMessage;
-        }
-        private async Task SendAsync(MimeMessage emailMessage)
-        {
-            using (var client = new SmtpClient())
+                Subject = userEmailOptions.Subject,
+                Body = userEmailOptions.Body,
+                From = new MailAddress(_smptpConfigurationModel.SenderAddress, "IdentityServer4"),
+                IsBodyHtml = _smptpConfigurationModel.IsBodyHtml
+
+            };
+            foreach (var toEmail in userEmailOptions.ToEmails)
             {
-                try
-                {
-                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, true);
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    await client.AuthenticateAsync(_emailConfig.UserName, _emailConfig.Password);
-                    await client.SendAsync(emailMessage);
-                }
-                catch (Exception ex)
-                {
-                    // logging needed
-                    Console.Out.WriteLine("" + ex.Message);
-                    throw;
-                }
-                finally
-                {
-                    await client.DisconnectAsync(true);
-                    client.Dispose();
-                }
+                mail.To.Add(toEmail);
             }
+            var networkCredential = new NetworkCredential(_smptpConfigurationModel.UserName, _smptpConfigurationModel.Password);
+
+            var smtpClient = new SmtpClient
+            {
+                Host = _smptpConfigurationModel.Host,
+                Port = _smptpConfigurationModel.Port,
+                EnableSsl = _smptpConfigurationModel.EnableSsl,
+                UseDefaultCredentials = _smptpConfigurationModel.UseDefaultCredentials,
+                Credentials = networkCredential
+            };
+            mail.BodyEncoding = Encoding.Default;
+            await smtpClient.SendMailAsync(mail);
         }
     }
 }

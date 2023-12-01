@@ -29,9 +29,13 @@ namespace AuthServer
             services.AddAutoMapper(typeof(Startup));
             var emailConfig = Configuration.GetSection(nameof(EmailConfiguration)).Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
+            services.AddSingleton<IEmailSender, EmailSender>();
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("OAuthIdentity")));
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(option =>
+            {
+                option.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<UserContext>()
                 .AddDefaultTokenProviders();
             var builder = services.AddIdentityServer(options =>
