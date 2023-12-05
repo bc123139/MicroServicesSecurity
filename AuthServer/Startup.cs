@@ -13,6 +13,7 @@ using System.Reflection;
 
 namespace AuthServer
 {
+    //https://github.com/AndrewTriesToCode/MultiTenantIdentityServer4/tree/main/src/IdentityServerAspNetIdentity
     public class Startup
     {
         public IConfiguration Configuration { get; set; }
