@@ -27,8 +27,18 @@ namespace AuthServer
             var config = builder.Services.GetRequiredService<IConfiguration>();
             var connectionString = config.GetConnectionString("OAuthIdentity");
             WebClientConfig.ClientUrl = config["WebClientUrl"];
-            SeedUserData.InsertSeedData(connectionString);
-            builder.MigrateDatabase().Run();
+            try
+            {
+                builder.MigrateDatabase().Run();
+                SeedUserData.InsertSeedData(connectionString);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+                throw ex;
+            }
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

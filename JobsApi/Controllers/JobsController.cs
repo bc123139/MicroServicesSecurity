@@ -24,6 +24,12 @@ namespace JobsApi.Controllers
             _logger = logger;
             _jobsContext = jobsContext;
         }
+        [AllowAnonymous]
+        [HttpGet(nameof(GetTest))]
+        public async Task<IEnumerable<Job>> GetTest()
+        {
+            return await _jobsContext.Jobs.ToListAsync();
+        }
 
         [HttpGet]
         public async Task<IEnumerable<Job>> Get()
