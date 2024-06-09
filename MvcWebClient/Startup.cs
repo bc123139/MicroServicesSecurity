@@ -47,7 +47,7 @@ namespace MvcWebClient
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, opt =>
             {
                 opt.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                opt.Authority = "https://localhost:5011";//Auth Server
+                opt.Authority = Configuration["AuthServerUrl"];//Auth Server
                 opt.ClientId = "mvc-client";
                 opt.ResponseType = OpenIdConnectResponseType.Code;
                 opt.SaveTokens = true;

@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    var webUrl = Configuration["WebClientUrl"];
+    var authHost = Configuration["AuthHost"];
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -37,7 +43,7 @@
                         <section>
                             <a class="nav-link text-dark" asp-action="Register"
                             asp-controller="Account" asp-protocol="https"
-                            asp-host="localhost:5011" asp-route-redirectUrl="https://localhost:5201">Register</a>
+                               asp-host="@authHost" asp-route-redirectUrl="@webUrl">Register</a>
                         </section>
                     }
                     else
@@ -48,7 +54,7 @@
                         <section>
                             <a class="nav-link text-dark" asp-action="Register"
                            asp-controller="Account" asp-protocol="https"
-                           asp-host="localhost:5011" asp-route-redirectUrl="https://localhost:5201">Register</a>
+                               asp-host="@authHost" asp-route-redirectUrl="@webUrl">Register</a>
                         </section>
                     }
                 </div>

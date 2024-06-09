@@ -48,7 +48,8 @@ namespace AuthServer.Extensions
                     FirstName=firstName,
                     LastName=lastName,
                     Address=address,
-                    Id=id.ToString()
+                    Id=id.ToString(),
+                    EmailConfirmed=true
                 };
                 var result =  userManager.CreateAsync(user,password).Result;
                 CheckResult(result);

@@ -26,7 +26,7 @@ namespace JobsApi
                 .AddJwtBearer("Bearer", opt =>
                 {
                     opt.RequireHttpsMetadata = false;
-                    opt.Authority = "https://localhost:5011";//Auth Server
+                    opt.Authority = Configuration["AuthServerUrl"];//Auth Server
                     opt.Audience = "jobsApi";
                 });
             services.AddControllers();

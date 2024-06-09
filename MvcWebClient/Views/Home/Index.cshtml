@@ -19,7 +19,7 @@
                 <span>@item.Company | @item.Location |posted on @item.PostedDate.ToString("MM/dd/yyyy")</span>
             </div>
             <p class="text-center">@item.Description</p>
-            <a class="btn btn-success" href="@Url.Action("Apply","Jobs", new {id = item.Id})" role="button" Apply for this job></a>
+            <a class="btn btn-success" href="@Url.Action("Apply","Jobs", new {id = item.Id})" role="button">Apply for this job</a>
             <hr/>
         </div>
     }

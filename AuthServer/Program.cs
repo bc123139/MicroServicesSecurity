@@ -1,3 +1,4 @@
+using AuthServer.Config;
 using AuthServer.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
 
 namespace AuthServer
 {
@@ -24,6 +26,7 @@ namespace AuthServer
             var builder = CreateHostBuilder(args).Build();
             var config = builder.Services.GetRequiredService<IConfiguration>();
             var connectionString = config.GetConnectionString("OAuthIdentity");
+            WebClientConfig.ClientUrl = config["WebClientUrl"];
             SeedUserData.InsertSeedData(connectionString);
             builder.MigrateDatabase().Run();
         }

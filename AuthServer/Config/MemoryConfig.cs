@@ -9,6 +9,7 @@ namespace AuthServer.Config
 {
     public class MemoryConfig
     {
+
         public static IEnumerable<IdentityResource> IdentityResourecs() => new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
@@ -30,13 +31,13 @@ namespace AuthServer.Config
                 ClientId ="mvc-client",
                 ClientName = "MvcClient",
                 AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris=new List<string>{ "https://localhost:5201/signin-oidc" },
+                RedirectUris=new List<string>{ $"{WebClientConfig.ClientUrl}/signin-oidc" },
                 AllowedScopes={IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Address,"roles","jobsApi.scope"},
                 ClientSecrets={new Secret("mvcclientsecret".Sha512()) },
                 RequirePkce=true,
                 RequireConsent=true,
-                PostLogoutRedirectUris=new List<string>{ "https://localhost:5201/signout-oidc" }
+                PostLogoutRedirectUris=new List<string>{ $"{WebClientConfig.ClientUrl}/signout-oidc" }
             }
         };
 
