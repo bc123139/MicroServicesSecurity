@@ -63,6 +63,10 @@ namespace AuthServer
              Migrations:
             Add-Migration InitialPersistedGrantMigration -c PersistedGrantDbContext -o Migrations/IdentityServer/PersistedGrantDb
             Add-Migration InitialConfigurationMigration -c ConfigurationDbContext -o Migrations/IdentityServer/ConfigurationDb
+
+            //Update-Database  -context PersistedGrantDbContext
+            //Update-Database  -context ConfigurationDbContext
+
             --Identity tables:
             Add-Migration CreateIdentityTables -c UserContext
             Update-Database -Context UserContext
